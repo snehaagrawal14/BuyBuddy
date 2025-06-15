@@ -1,0 +1,143 @@
+/* BuyBuddy Custom Styles */
+
+/* Timeline Component for How It Works */
+.timeline {
+    position: relative;
+    padding: 1rem 0;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 2rem;
+    padding-left: 2.5rem;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-item:before {
+    content: '';
+    position: absolute;
+    left: 0.85rem;
+    top: 0.85rem;
+    height: 100%;
+    width: 1px;
+    background: var(--bs-border-color);
+}
+
+.timeline-item:last-child:before {
+    display: none;
+}
+
+.timeline-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.timeline-content {
+    padding-top: 0.25rem;
+}
+
+/* API Code Snippets */
+pre {
+    border-radius: 6px;
+    background-color: var(--bs-dark) !important;
+    color: var(--bs-light);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    overflow: auto;
+    max-height: 400px;
+}
+
+pre code {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    white-space: pre;
+    display: block;
+}
+
+/* Recommendation Cards */
+.recommendation-results .card {
+    transition: all 0.2s ease-in-out;
+}
+
+.recommendation-results .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Badge Styling */
+.badge.bg-dark {
+    background-color: rgba(var(--bs-dark-rgb), 0.8) !important;
+}
+
+/* Small text utility */
+.smaller {
+    font-size: 0.75rem;
+}
+
+/* Custom Sidebar */
+.sidebar {
+    top: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .sidebar {
+        position: relative !important;
+        top: 0 !important;
+    }
+    
+    #productSelect {
+        height: auto !important;
+        max-height: 200px;
+    }
+}
+
+/* Dashboard activity feed */
+.list-group-item {
+    border-color: var(--bs-border-color);
+}
+
+/* Improve slider styling */
+.form-range::-webkit-slider-thumb {
+    background: var(--bs-primary);
+}
+
+.form-range::-moz-range-thumb {
+    background: var(--bs-primary);
+}
+
+/* Tab styling for code examples */
+.nav-tabs .nav-link.active {
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+    border-bottom-color: var(--bs-dark);
+}
+
+/* Prevent content jump on page load */
+html {
+    overflow-y: scroll;
+}
+
+/* Focus outline for better accessibility */
+a:focus, button:focus, input:focus, textarea:focus, select:focus {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+/* API Response element */
+.api-response {
+    position: relative;
+    margin: 0;
+}

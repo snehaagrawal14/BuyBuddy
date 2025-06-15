@@ -1,0 +1,639 @@
+{% extends "base.html" %}
+
+{% block title %}API Documentation - BuyBuddy{% endblock %}
+
+{% block content %}
+
+    <!-- Documentation Content -->
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="sidebar sticky-top pt-3">
+                    <div class="list-group mb-4">
+                        <a href="#introduction" class="list-group-item list-group-item-action">Introduction</a>
+                        <a href="#authentication" class="list-group-item list-group-item-action">Authentication</a>
+                        <a href="#getting-started" class="list-group-item list-group-item-action">Getting Started</a>
+                        <a href="#api-reference" class="list-group-item list-group-item-action">API Reference</a>
+                        <a href="#integration" class="list-group-item list-group-item-action">Integration Guide</a>
+                        <a href="#advanced" class="list-group-item list-group-item-action">Advanced Usage</a>
+                        <a href="#faq" class="list-group-item list-group-item-action">FAQ</a>
+                    </div>
+                    <div class="card bg-dark-subtle mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Need help?</h5>
+                            <p class="card-text">Contact our support team for assistance with integration or API usage.</p>
+                            <a href="#" class="btn btn-outline-primary btn-sm">Contact Support</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <section id="introduction" class="mb-5">
+                    <h1 class="mb-4">BuyBuddy API Documentation</h1>
+                    <p class="lead">The BuyBuddy API provides grocery product recommendations for e-commerce platforms using data-driven analytics.</p>
+                    <p>This documentation will guide you through the process of integrating BuyBuddy's recommendation engine into your platform, from obtaining API keys to implementing the recommendation engine and customizing it to your needs.</p>
+                    
+                    <div class="alert alert-primary">
+                        <h5><i class="bi bi-info-circle me-2"></i>Interactive API Documentation</h5>
+                        <p class="mb-0">For a fully interactive API documentation with request and response examples, visit our <a href="/docs/" class="alert-link">Swagger UI</a>.</p>
+                    </div>
+                </section>
+                
+                <section id="authentication" class="mb-5">
+                    <h2 class="mb-4">Authentication</h2>
+                    <p>All API requests must include your API key in the request headers. You can obtain an API key by registering for a BuyBuddy account.</p>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">API Key Authentication</h5>
+                        </div>
+                        <div class="card-body bg-dark-subtle">
+                            <p>Include your API key in the <code>X-API-Key</code> header:</p>
+                            <pre><code>X-API-Key: your_api_key_here</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <h5><i class="bi bi-shield-lock me-2"></i>Security Note</h5>
+                        <p class="mb-0">Keep your API key secure and never expose it in client-side code. All API requests should be made from your server.</p>
+                    </div>
+                </section>
+                
+                <section id="getting-started" class="mb-5">
+                    <h2 class="mb-4">Getting Started</h2>
+                    <p>Follow these steps to integrate BuyBuddy recommendations:</p>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-number bg-primary">1</div>
+                            <div class="timeline-content">
+                                <h4>Register for an API Key</h4>
+                                <p>Sign up for a BuyBuddy account and generate an API key.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-number bg-primary">2</div>
+                            <div class="timeline-content">
+                                <h4>Upload Your Product Catalog</h4>
+                                <p>Use the <code>/api/products</code> endpoint to upload your product catalog.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-number bg-primary">3</div>
+                            <div class="timeline-content">
+                                <h4>Upload Transaction Data</h4>
+                                <p>Use the <code>/api/transactions</code> endpoint to upload historical transaction data.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-number bg-primary">4</div>
+                            <div class="timeline-content">
+                                <h4>Get Recommendations</h4>
+                                <p>Use the <code>/api/recommend</code> endpoint to get product recommendations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="api-reference" class="mb-5">
+                    <h2 class="mb-4">API Reference</h2>
+                    
+                    <!-- API Endpoints -->
+                    <div class="accordion" id="accordionEndpoints">
+                        <!-- Recommendations Endpoint -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <span class="badge bg-success me-2">POST</span> /api/recommend
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionEndpoints">
+                                <div class="accordion-body">
+                                    <p>Get product recommendations based on selected products.</p>
+                                    
+                                    <h5>Request Parameters</h5>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Parameter</th>
+                                                    <th>Type</th>
+                                                    <th>Required</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>product_ids</td>
+                                                    <td>array</td>
+                                                    <td>Yes</td>
+                                                    <td>Array of product IDs to get recommendations for</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>limit</td>
+                                                    <td>integer</td>
+                                                    <td>No</td>
+                                                    <td>Maximum number of recommendations to return (default: 5)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>min_confidence</td>
+                                                    <td>number</td>
+                                                    <td>No</td>
+                                                    <td>Minimum confidence threshold (0-1, default: 0.1)</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <h5>Example Request</h5>
+                                    <pre><code>POST /api/recommend
+Content-Type: application/json
+X-API-Key: your_api_key_here
+
+{
+  "product_ids": ["P001", "P003"],
+  "limit": 5,
+  "min_confidence": 0.1
+}</code></pre>
+                                    
+                                    <h5>Example Response</h5>
+                                    <pre><code>{
+  "recommendations": [
+    {
+      "product_id": "P001",
+      "recommended_products": [
+        {
+          "product_id": "P002",
+          "name": "Bread",
+          "confidence": 0.75,
+          "support": 0.35,
+          "category": "Bakery"
+        },
+        {
+          "product_id": "P005",
+          "name": "Butter",
+          "confidence": 0.6,
+          "support": 0.3,
+          "category": "Dairy"
+        }
+      ]
+    },
+    {
+      "product_id": "P003",
+      "recommended_products": [
+        {
+          "product_id": "P004",
+          "name": "Cheese",
+          "confidence": 0.65,
+          "support": 0.28,
+          "category": "Dairy"
+        }
+      ]
+    }
+  ]
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Products Endpoint -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <span class="badge bg-success me-2">POST</span> /api/products
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionEndpoints">
+                                <div class="accordion-body">
+                                    <p>Add or update product data in the system.</p>
+                                    
+                                    <h5>Request Parameters</h5>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Parameter</th>
+                                                    <th>Type</th>
+                                                    <th>Required</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>products</td>
+                                                    <td>array</td>
+                                                    <td>Yes</td>
+                                                    <td>Array of product objects</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <h5>Example Request</h5>
+                                    <pre><code>POST /api/products
+Content-Type: application/json
+X-API-Key: your_api_key_here
+
+{
+  "products": [
+    {
+      "product_id": "P001",
+      "name": "Milk",
+      "category": "Dairy",
+      "subcategory": "Milk & Cream",
+      "metadata": {
+        "brand": "Example Farm",
+        "size": "1 gallon",
+        "price": 3.99
+      }
+    },
+    {
+      "product_id": "P002",
+      "name": "Bread",
+      "category": "Bakery",
+      "subcategory": "Bread",
+      "metadata": {
+        "brand": "Bakery Fresh",
+        "size": "1 loaf",
+        "price": 2.49
+      }
+    }
+  ]
+}</code></pre>
+                                    
+                                    <h5>Example Response</h5>
+                                    <pre><code>{
+  "status": "success",
+  "added": 1,
+  "updated": 1,
+  "total": 2
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Transactions Endpoint -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    <span class="badge bg-success me-2">POST</span> /api/transactions
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionEndpoints">
+                                <div class="accordion-body">
+                                    <p>Upload transaction data for recommendation training.</p>
+                                    
+                                    <h5>Request Parameters</h5>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Parameter</th>
+                                                    <th>Type</th>
+                                                    <th>Required</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>transactions</td>
+                                                    <td>array</td>
+                                                    <td>Yes</td>
+                                                    <td>Array of transaction objects</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <h5>Example Request</h5>
+                                    <pre><code>POST /api/transactions
+Content-Type: application/json
+X-API-Key: your_api_key_here
+
+{
+  "transactions": [
+    {
+      "transaction_id": "T123456",
+      "timestamp": "2025-05-15T14:30:00",
+      "products": ["P001", "P002", "P005"],
+      "metadata": {
+        "store_id": "S001",
+        "customer_id": "C789"
+      }
+    },
+    {
+      "transaction_id": "T123457",
+      "timestamp": "2025-05-15T15:22:00",
+      "products": ["P003", "P004", "P001"],
+      "metadata": {
+        "store_id": "S001",
+        "customer_id": "C456"
+      }
+    }
+  ]
+}</code></pre>
+                                    
+                                    <h5>Example Response</h5>
+                                    <pre><code>{
+  "status": "accepted",
+  "message": "Transactions accepted for processing",
+  "job_id": 42
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Configuration Endpoint -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    <span class="badge bg-primary me-2">GET</span> <span class="badge bg-success me-2">PUT</span> /api/config
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionEndpoints">
+                                <div class="accordion-body">
+                                    <p>Get or update API configuration parameters.</p>
+                                    
+                                    <h5>Example GET Response</h5>
+                                    <pre><code>{
+  "min_confidence": 0.1,
+  "min_support": 0.01,
+  "max_recommendations": 5
+}</code></pre>
+                                    
+                                    <h5>Example PUT Request</h5>
+                                    <pre><code>PUT /api/config
+Content-Type: application/json
+X-API-Key: your_api_key_here
+
+{
+  "min_confidence": 0.2,
+  "min_support": 0.05,
+  "max_recommendations": 10
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="integration" class="mb-5">
+                    <h2 class="mb-4">Integration Guide</h2>
+                    
+                    <h4 class="mb-3">Step 1: Prepare Your Product Data</h4>
+                    <p>Before integrating BuyBuddy, ensure your product catalog is properly structured with unique product IDs.</p>
+                    
+                    <h4 class="mb-3">Step 2: Upload Products</h4>
+                    <p>Use the <code>/api/products</code> endpoint to upload your product catalog.</p>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">Python Example</div>
+                        <div class="card-body bg-dark-subtle">
+                            <pre><code>import requests
+import json
+
+api_key = "YOUR_API_KEY"
+url = "https://api.buybuddy.com/api/products"
+
+# Prepare product data
+products = [
+    {
+        "product_id": "P001",
+        "name": "Milk",
+        "category": "Dairy"
+    },
+    {
+        "product_id": "P002",
+        "name": "Bread",
+        "category": "Bakery"
+    }
+]
+
+# Make API request
+response = requests.post(
+    url,
+    headers={"X-API-Key": api_key, "Content-Type": "application/json"},
+    data=json.dumps({"products": products})
+)
+
+print(response.json())</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mb-3">Step 3: Upload Transaction Data</h4>
+                    <p>Use the <code>/api/transactions</code> endpoint to upload historical transaction data.</p>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">Python Example</div>
+                        <div class="card-body bg-dark-subtle">
+                            <pre><code>import requests
+import json
+
+api_key = "YOUR_API_KEY"
+url = "https://api.buybuddy.com/api/transactions"
+
+# Prepare transaction data
+transactions = [
+    {
+        "transaction_id": "T123456",
+        "timestamp": "2025-05-15T14:30:00",
+        "products": ["P001", "P002"]
+    },
+    {
+        "transaction_id": "T123457",
+        "timestamp": "2025-05-15T15:22:00",
+        "products": ["P003", "P001"]
+    }
+]
+
+# Make API request
+response = requests.post(
+    url,
+    headers={"X-API-Key": api_key, "Content-Type": "application/json"},
+    data=json.dumps({"transactions": transactions})
+)
+
+print(response.json())</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mb-3">Step 4: Implement Recommendations on Your Website</h4>
+                    <p>Use the <code>/api/recommend</code> endpoint to get product recommendations when customers view products or add items to their cart.</p>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">JavaScript Example (Frontend)</div>
+                        <div class="card-body bg-dark-subtle">
+                            <pre><code>// This should be implemented on your server to keep API key secure
+// For demonstration purposes only
+async function getRecommendations(productIds) {
+  const response = await fetch('/get-recommendations', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ productIds })
+  });
+  
+  return await response.json();
+}
+
+// When a user adds a product to cart
+document.querySelector('.add-to-cart-button').addEventListener('click', async () => {
+  const productId = 'P001';
+  
+  // Get recommendations for this product
+  const recommendations = await getRecommendations([productId]);
+  
+  // Display recommendations to the user
+  displayRecommendations(recommendations);
+});</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">Node.js Example (Backend)</div>
+                        <div class="card-body bg-dark-subtle">
+                            <pre><code>const express = require('express');
+const axios = require('axios');
+const app = express();
+
+app.use(express.json());
+
+// Endpoint to get recommendations (keeps API key secure)
+app.post('/get-recommendations', async (req, res) => {
+  const { productIds } = req.body;
+  
+  try {
+    const response = await axios.post('https://api.buybuddy.com/api/recommend', {
+      product_ids: productIds
+    }, {
+      headers: {
+        'X-API-Key': process.env.BUYBUDDY_API_KEY
+      }
+    });
+    
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error getting recommendations:', error);
+    res.status(500).json({ error: 'Failed to get recommendations' });
+  }
+});</code></pre>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="advanced" class="mb-5">
+                    <h2 class="mb-4">Advanced Usage</h2>
+                    
+                    <h4 class="mb-3">Custom Recommendation Parameters</h4>
+                    <p>You can customize the recommendation engine's behavior by adjusting parameters like confidence threshold and support.</p>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">Setting Custom Parameters</div>
+                        <div class="card-body bg-dark-subtle">
+                            <pre><code>// Example: Adjust recommendation parameters
+fetch("https://api.buybuddy.com/api/config", {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": apiKey
+  },
+  body: JSON.stringify({
+    "min_confidence": 0.3,  // Higher confidence threshold (more selective)
+    "min_support": 0.02,    // Higher support threshold (more common associations)
+    "max_recommendations": 3 // Fewer recommendations per product
+  })
+})</code></pre>
+                        </div>
+                    </div>
+                    
+                    <h4 class="mb-3">Batch Processing</h4>
+                    <p>For large product catalogs, you can upload products in batches.</p>
+                    
+                    <h4 class="mb-3">Monitoring Recommendation Quality</h4>
+                    <p>You can track the effectiveness of recommendations by monitoring:</p>
+                    <ul>
+                        <li>Click-through rates on recommended products</li>
+                        <li>Conversion rates for recommended products</li>
+                        <li>Average order value with recommendations</li>
+                    </ul>
+                </section>
+                
+                <section id="faq" class="mb-5">
+                    <h2 class="mb-4">Frequently Asked Questions</h2>
+                    
+                    <div class="accordion" id="accordionFAQ">
+                        <div class="accordion-item">
+                            <h3 class="accordion-header" id="faqOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
+                                    How does the recommendation algorithm work?
+                                </button>
+                            </h3>
+                            <div id="faqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="faqOne" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    <p>BuyBuddy uses the Apriori algorithm to identify associations between products based on transaction data. The algorithm analyzes which products are frequently purchased together to generate recommendations. The system uses confidence scores to determine the strength of these associations.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h3 class="accordion-header" id="faqTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                                    How much transaction data is needed for good recommendations?
+                                </button>
+                            </h3>
+                            <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqTwo" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    <p>For effective recommendations, we recommend uploading at least 1,000 transactions. More data generally leads to better recommendations, especially for less popular products. The quality of recommendations will improve as you continue to upload transaction data over time.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h3 class="accordion-header" id="faqThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                                    How often should I update my transaction data?
+                                </button>
+                            </h3>
+                            <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqThree" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    <p>We recommend uploading transaction data daily or weekly for the best results. This ensures that recommendations stay current with changing shopping behaviors and seasonal trends. You can set up automated data uploads using our API.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h3 class="accordion-header" id="faqFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                                    Can I customize where recommendations appear on my site?
+                                </button>
+                            </h3>
+                            <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqFour" data-bs-parent="#accordionFAQ">
+                                <div class="accordion-body">
+                                    <p>Yes, you have complete control over where and how recommendations appear on your site. Common placement locations include product detail pages ("Frequently bought together"), shopping cart pages ("You might also like"), and checkout pages. Our API returns recommendation data that you can display according to your website's design.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+{% endblock %}

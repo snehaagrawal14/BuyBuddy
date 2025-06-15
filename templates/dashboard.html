@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - BuyBuddy{% endblock %}
+
+{% block content %}
+    <!-- Dashboard Content -->
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Dashboard</h1>
+            <div>
+                <a href="{{ url_for('demo.sample_recommendations') }}" class="btn btn-success me-2">
+                    <i class="bi bi-graph-up-arrow me-1"></i> Try Enhanced Recommendations
+                </a>
+                <a href="{{ url_for('demo.add_product') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i> Add Product
+                </a>
+            </div>
+        </div>
+
+        <!-- Welcome Card -->
+        <div class="card mb-4 bg-primary bg-opacity-10 border-primary border-top-0 border-end-0 border-bottom-0 border-3">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-person-circle fs-1 text-primary me-3"></i>
+                    <div>
+                        <h3 class="mb-1">Welcome, {{ current_user.username }}!</h3>
+                        <p class="mb-0 text-muted">{{ current_user.email }} | {{ current_user.company_name|default('No company specified', true) }}</p>
+                    </div>
+                </div>
+                <p>
+                    BuyBuddy's recommendation engine is now enhanced with time-of-day and seasonal product boosting! 
+                    Try our <a href="{{ url_for('demo.sample_recommendations') }}" class="fw-bold">new enhanced recommendation demo</a> to see it in action.
+                </p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Total Products</h6>
+                                <h2 class="mb-0">{{ products|length }}</h2>
+                            </div>
+                            <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                                <i class="bi bi-box-seam text-primary fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">API Keys</h6>
+                                <h2 class="mb-0">{{ api_keys|length }}</h2>
+                            </div>
+                            <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                                <i class="bi bi-key-fill text-success fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Date</h6>
+                                <h2 class="mb-0">{{ now.strftime('%b %Y') }}</h2>
+                            </div>
+                            <div class="bg-info bg-opacity-10 rounded-circle p-3">
+                                <i class="bi bi-calendar-event text-info fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted mb-2">Time of Day</h6>
+                                <h2 class="mb-0">{{ time_of_day|default('Evening', true)|title }}</h2>
+                            </div>
+                            <div class="bg-warning bg-opacity-10 rounded-circle p-3">
+                                <i class="bi bi-clock text-warning fs-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Key Card -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success bg-opacity-10">
+                        <h5 class="mb-0 text-success">
+                            <i class="bi bi-key me-2"></i>Your API Keys
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if api_keys %}
+                            <div class="list-group">
+                                {% for key in api_keys %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="mb-0">{{ key.name }}</h6>
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                        <div class="input-group mb-2">
+                                            <input type="text" class="form-control form-control-sm" value="{{ key.key }}" readonly>
+                                            <button class="btn btn-sm btn-outline-secondary copy-btn" type="button">
+                                                <i class="bi bi-clipboard"></i>
+                                            </button>
+                                        </div>
+                                        <small class="text-muted">Created: {{ key.created_at.strftime('%Y-%m-%d') }}</small>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="mt-3">
+                                <a href="{{ url_for('demo.api_keys') }}" class="btn btn-outline-success btn-sm">
+                                    <i class="bi bi-gear-fill me-1"></i> Manage API Keys
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="bi bi-key-fill text-muted fs-1 mb-3"></i>
+                                <h5>No API Keys Found</h5>
+                                <p class="text-muted mb-3">You need API keys to access the recommendation engine.</p>
+                                <a href="{{ url_for('demo.api_keys') }}" class="btn btn-success">
+                                    <i class="bi bi-plus-lg me-1"></i> Create API Key
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Products Card -->
+            <div class="col-lg-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary bg-opacity-10">
+                        <h5 class="mb-0 text-primary">
+                            <i class="bi bi-box me-2"></i>Latest Products
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if products %}
+                            <div class="list-group">
+                                {% for product in products[:5] %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0">{{ product.name }}</h6>
+                                                <small class="text-muted">{{ product.category }}</small>
+                                            </div>
+                                            <span class="badge bg-light text-dark">{{ product.product_id }}</span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            {% if products|length > 5 %}
+                                <div class="text-muted text-center mt-3">
+                                    <small>Showing 5 of {{ products|length }} products</small>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="mt-3">
+                                <a href="{{ url_for('demo.add_product') }}" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-plus-lg me-1"></i> Add New Product
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="bi bi-box-seam text-muted fs-1 mb-3"></i>
+                                <h5>No Products Found</h5>
+                                <p class="text-muted mb-3">Add products to start getting recommendations.</p>
+                                <div class="d-grid gap-2 col-6 mx-auto">
+                                    <a href="{{ url_for('demo.add_product') }}" class="btn btn-primary">
+                                        <i class="bi bi-plus-lg me-1"></i> Add Product
+                                    </a>
+                                    <a href="{{ url_for('demo.generate_sample_data') }}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-database-fill me-1"></i> Generate Sample Data
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Access -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Access</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('demo.sample_recommendations') }}" class="card text-decoration-none h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-graph-up-arrow text-success fs-1 mb-3"></i>
+                                <h6>Try Recommendations</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('demo.documentation') }}" class="card text-decoration-none h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-file-earmark-text text-info fs-1 mb-3"></i>
+                                <h6>API Documentation</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('demo.profile') }}" class="card text-decoration-none h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-person-circle text-primary fs-1 mb-3"></i>
+                                <h6>Your Profile</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <a href="{{ url_for('demo.config') }}" class="card text-decoration-none h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-gear-fill text-secondary fs-1 mb-3"></i>
+                                <h6>Configuration</h6>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Copy button functionality
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            input.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const originalHTML = this.innerHTML;
+            this.innerHTML = '<i class="bi bi-check-lg"></i>';
+            setTimeout(() => {
+                this.innerHTML = originalHTML;
+            }, 1500);
+        });
+    });
+</script>
+{% endblock %}

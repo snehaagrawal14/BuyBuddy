@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block title %}Enhanced Product Recommendation Demo - BuyBuddy{% endblock %}
+
+{% block content %}
+
+    <!-- Demo Content -->
+    <div class="container">
+        <h1 class="mb-4">Enhanced Product Recommendation Demo <span class="badge bg-success">2025 Edition</span></h1>
+        
+        {% if context %}
+        <!-- Context Panel -->
+        <div class="card mb-4 border-0 bg-light">
+            <div class="card-body py-2">
+                <div class="row">
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Current Time:</small>
+                        <strong>{{ context.current_time }} ({{ context.time_of_day }})</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Current Date:</small>
+                        <strong>{{ context.current_date }} ({{ context.current_month }})</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Algorithm:</small>
+                        <strong>v{{ context.algorithm_version }}</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Recommendations:</small>
+                        <strong>{{ context.total_recommendations|default('0') }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="row">
+            <div class="col-lg-4">
+                <!-- Feature Panel -->
+                <div class="card mb-4 border-primary border-top-0 border-end-0 border-bottom-0 border-3">
+                    <div class="card-header bg-primary bg-opacity-10">
+                        <h4 class="mb-0 text-primary">
+                            <i class="bi bi-stars me-2"></i>
+                            Featured Categories
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        {% if featured_categories %}
+                            <p class="text-muted mb-3">Based on current time and season:</p>
+                            
+                            {% for category in featured_categories %}
+                                <span class="badge bg-primary bg-opacity-10 text-primary mb-2 me-2 p-2">
+                                    {{ category }}
+                                </span>
+                            {% endfor %}
+                            
+                            <hr class="my-3">
+                            
+                            {% if popular_products %}
+                                <form method="post" id="quickSelectForm">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="mb-0">Try Featured Items</h5>
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-lightning me-1"></i>Get Recommendations
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="list-group">
+                                        {% for product in popular_products %}
+                                            <label class="list-group-item d-flex align-items-center">
+                                                <input class="form-check-input me-2" type="checkbox" 
+                                                      name="products" value="{{ product.product_id }}" checked>
+                                                <span>{{ product.name }}</span>
+                                                <small class="ms-auto text-muted">{{ product.category }}</small>
+                                            </label>
+                                        {% endfor %}
+                                    </div>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <p class="text-muted">No featured categories available.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Product Selection Panel -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4 class="mb-0">
+                            <i class="bi bi-cart3 me-2"></i>
+                            Advanced Selection
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        {% if not products %}
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle me-2"></i> No products available. Please <a href="{{ url_for('demo.generate_sample_data') }}">generate sample data</a> first.
+                            </div>
+                        {% else %}
+                            <p class="text-muted">Or select specific products for custom recommendations:</p>
+                            <form method="post" id="productForm">
+                                <div class="mb-3">
+                                    <select name="products" id="productSelect" class="form-select" multiple size="10">
+                                        {% for product in products %}
+                                            <option value="{{ product.product_id }}" {% if selected and product.product_id in selected %}selected{% endif %}>
+                                                {{ product.name }} ({{ product.category }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="form-text">Hold Ctrl/Cmd to select multiple products</div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-search me-2"></i>Get Recommendations
+                                    </button>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="card border-info border-top-0 border-end-0 border-bottom-0 border-3">
+                    <div class="card-header bg-info bg-opacity-10">
+                        <h4 class="mb-0 text-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            How It Works
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="fw-bold">Enhanced Recommendation Engine 3.0:</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Seasonal Recommendations</strong>
+                                <p class="text-muted small ms-4">Products are boosted based on the current month</p>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Time-of-Day Awareness</strong>
+                                <p class="text-muted small ms-4">Morning, midday, evening, and late-night product boosting</p>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Advanced Analytics</strong>
+                                <p class="text-muted small ms-4">Purchase pattern recognition with Apriori algorithm</p>
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                <strong>Real Grocery Data</strong>
+                                <p class="text-muted small ms-4">Uses real-world grocery transaction data</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <!-- Selected Products Panel (if any) -->
+                {% if selected_names %}
+                    <div class="card mb-4 bg-light border-0">
+                        <div class="card-body py-3">
+                            <h5 class="card-title mb-3">Selected Products:</h5>
+                            <div>
+                                {% for name in selected_names %}
+                                    <span class="badge bg-secondary p-2 me-2 mb-2">{{ name }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            
+                <!-- Recommendations Panel -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-success bg-opacity-10">
+                        <h4 class="mb-0 text-success">
+                            <i class="bi bi-graph-up me-2"></i>Smart Recommendations
+                        </h4>
+                        {% if recommendations %}
+                            <span class="badge bg-success">
+                                {{ context.total_recommendations|default('0') }} products recommended
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        {% if recommendations %}
+                            <div class="recommendation-results">
+                                {% for rec in recommendations %}
+                                    <div class="rec-item mb-4">
+                                        <h5 class="border-bottom pb-2 d-flex align-items-center">
+                                            <i class="bi bi-cart3 me-2"></i>
+                                            {% for product in products %}
+                                                {% if product.product_id == rec.product_id %}
+                                                    {{ product.name }}
+                                                    <span class="badge bg-secondary ms-2">{{ product.category }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </h5>
+                                        <div class="recommended-products">
+                                            <div class="row row-cols-1 row-cols-md-3 g-3">
+                                                {% for product in rec.recommended_products %}
+                                                    <div class="col">
+                                                        <div class="card h-100 border {% if product.is_seasonal or product.is_time_relevant %}border-success{% else %}border-light{% endif %}">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <h6 class="card-title mb-2">{{ product.name }}</h6>
+                                                                </div>
+                                                                <span class="badge bg-primary mb-2">{{ product.category }}</span>
+                                                                
+                                                                <!-- Boosting indicators -->
+                                                                {% if product.is_seasonal %}
+                                                                    <span class="badge bg-success bg-opacity-10 text-success me-1">
+                                                                        <i class="bi bi-calendar-event me-1"></i>Seasonal
+                                                                    </span>
+                                                                {% endif %}
+                                                                
+                                                                {% if product.is_time_relevant %}
+                                                                    <span class="badge bg-info bg-opacity-10 text-info">
+                                                                        <i class="bi bi-clock me-1"></i>{{ product.time_of_day|default(context.time_of_day)|title }}
+                                                                    </span>
+                                                                {% endif %}
+                                                                
+                                                                <!-- Metrics -->
+                                                                <div class="mt-3">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                        <span class="small">Total Score:</span>
+                                                                        <span class="badge {% if product.score >= 0.7 %}bg-success{% elif product.score >= 0.4 %}bg-info{% else %}bg-secondary{% endif %}">
+                                                                            {{ (product.score * 100)|round|int }}%
+                                                                        </span>
+                                                                    </div>
+                                                                    <div class="progress" style="height: 8px;">
+                                                                        <div class="progress-bar {% if product.score >= 0.7 %}bg-success{% elif product.score >= 0.4 %}bg-info{% else %}bg-secondary{% endif %}" 
+                                                                             role="progressbar" 
+                                                                             style="width: {{ (product.score * 100)|round|int }}%" 
+                                                                             aria-valuenow="{{ (product.score * 100)|round|int }}" 
+                                                                             aria-valuemin="0" 
+                                                                             aria-valuemax="100"></div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="mt-2">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                        <span class="small">Confidence:</span>
+                                                                        <span class="badge bg-info">{{ (product.confidence * 100)|round|int }}%</span>
+                                                                    </div>
+                                                                    <div class="progress" style="height: 5px;">
+                                                                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ (product.confidence * 100)|round|int }}%" aria-valuenow="{{ (product.confidence * 100)|round|int }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="mt-2">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                        <span class="small">Support:</span>
+                                                                        <span class="badge bg-secondary">{{ (product.support * 100)|round|int }}%</span>
+                                                                    </div>
+                                                                    <div class="progress" style="height: 5px;">
+                                                                        <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ (product.support * 100)|round|int }}%" aria-valuenow="{{ (product.support * 100)|round|int }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% elif selected %}
+                            <div class="text-center py-5">
+                                <i class="bi bi-search fs-1 text-muted mb-3"></i>
+                                <h5>No recommendations found</h5>
+                                <p class="text-muted">Try selecting different products or combinations.</p>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="bi bi-hand-index fs-1 text-muted mb-3"></i>
+                                <h5>Select products to see recommendations</h5>
+                                <p class="text-muted">Use the Featured Items or Advanced Selection to get started.</p>
+                                <p class="text-muted small">Recommendations will automatically adjust based on time of day and season!</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if recommendations %}
+                    <!-- Recommendation Details Panel -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h4 class="mb-0">
+                                <i class="bi bi-gear me-2"></i>Recommendation Details
+                            </h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Algorithm Version
+                                    <span class="badge bg-primary">{{ context.algorithm_version }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Time Period
+                                    <span class="badge bg-info">{{ context.time_of_day }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Current Month
+                                    <span class="badge bg-secondary">{{ context.current_month }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Seasonal Boosting
+                                    {% if context.seasonal_boost_applied %}
+                                        <span class="badge bg-success">Enabled</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Disabled</span>
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Time-of-Day Boosting
+                                    {% if context.time_boost_applied %}
+                                        <span class="badge bg-success">Enabled</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Disabled</span>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                            
+                            <div class="mt-3">
+                                <p class="text-muted mb-2">API response (for developers):</p>
+                                <pre class="api-response bg-dark p-3 rounded small" style="max-height: 300px; overflow-y: auto;"><code>{{ recommendations|tojson(indent=2) }}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/demo.js') }}"></script>
+{% endblock %}
